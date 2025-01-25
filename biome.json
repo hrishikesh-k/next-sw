@@ -37,13 +37,23 @@
   },
   "overrides": [
     {
-      "include": ["**/middleware.ts"],
+      "include": ["**/api/assets/route.ts"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noNodejsModules": "off"
+          }
+        }
+      }
+    },
+    {
+      "include": ["**/api/deploy/route.ts"],
       "javascript": {
         "globals": ["Netlify"]
       }
     },
     {
-      "include": ["**/*.tsx"],
+      "include": ["./next.config.js", "**/*.tsx"],
       "linter": {
         "rules": {
           "style": {

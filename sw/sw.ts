@@ -4,7 +4,7 @@ const bc = new BroadcastChannel('sw')
 const cacheVersion = DEPLOY_ID
 
 async function compareDeployDetails() {
-  const fetchedResponse = await fetch('/deploy')
+  const fetchedResponse = await fetch('/api/deploy')
   const fetchedJson = await fetchedResponse.json()
 
   if (cacheVersion !== fetchedJson.deployId) {
@@ -39,6 +39,8 @@ async function handleRequest(e: FetchEvent) {
   if (response.status < 400) {
     await cache.put(e.request, response.clone())
   }
+
+  bc.postMessage('error')
 
   return response
 }

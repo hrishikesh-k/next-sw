@@ -27,8 +27,13 @@ export default function () {
       navigator.serviceWorker.ready.then(() => bc.postMessage('load'))
 
       bc.addEventListener('message', (e) => {
-        if (e.data === 'stale') {
-          setCacheFreshness(false)
+        switch (e.data) {
+          case 'error':
+          case 'stale':
+            setCacheFreshness(false)
+            break
+          default:
+          // no-op
         }
       })
     }
