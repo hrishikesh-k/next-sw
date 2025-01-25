@@ -7,9 +7,9 @@ export function GET() {
 
   return Response.json({
     assets: existsSync(manifestPath)
-      ? Object.values(JSON.parse(readFileSync(manifestPath, 'utf-8'))).filter(
-          (a) => (a as string).endsWith('.js')
-        )
+      ? Object.values(JSON.parse(readFileSync(manifestPath, 'utf-8')))
+          .filter((a) => (a as string).endsWith('.js'))
+          .map((a) => `/_next/${a}`)
       : []
   })
 }
