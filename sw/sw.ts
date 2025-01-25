@@ -1,5 +1,6 @@
 const bc = new BroadcastChannel('sw')
 // @ts-expect-error
+// biome-ignore lint/correctness/noUndeclaredVariables: transformed by esbuild
 const cacheVersion = DEPLOY_ID
 
 async function compareDeployDetails() {
