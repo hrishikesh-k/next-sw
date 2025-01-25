@@ -6,6 +6,7 @@ export default function (props: PropsWithChildren) {
     <html lang="en">
       <body>
         {props.children}
+        <br />
         <Sw />
       </body>
     </html>
