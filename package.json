@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "@netlify/plugin-nextjs": "5.9.4",
+    "next": "15.1.6",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@netlify/edge-functions": "2.11.1",
+    "@types/node": "22.10.10",
+    "@types/react": "19.0.8",
+    "@types/react-dom": "19.0.3",
+    "@types/serviceworker": "0.0.116",
+    "esbuild": "0.24.2",
+    "typescript": "5.7.3"
+  },
+  "scripts": {
+    "build": "next build",
+    "build:sw": "tsc --project ./sw/tsconfig.json && esbuild ./sw/sw.ts --allow-overwrite --bundle --minify --outfile=./public/sw.js --tsconfig=./sw/tsconfig.json",
+    "dev": "next dev",
+    "lint": "biome check"
+  },
+  "type": "module"
+}
