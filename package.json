@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "next build",
-    "build:sw": "tsc --project ./sw/tsconfig.json && esbuild ./sw/sw.ts --allow-overwrite --bundle --minify --outfile=./public/sw.js --tsconfig=./sw/tsconfig.json",
+    "build:sw": "tsc --project ./sw/tsconfig.json && esbuild ./sw/sw.ts --allow-overwrite --bundle --define:DEPLOY_ID='\"'\"$DEPLOY_ID\"'\"' --minify --outfile=./public/sw.js --tsconfig=./sw/tsconfig.json",
     "dev": "next dev",
     "lint": "biome check"
   },

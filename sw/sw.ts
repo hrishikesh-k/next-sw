@@ -1,29 +1,14 @@
 const bc = new BroadcastChannel('sw')
-const cacheVersion = crypto.getRandomValues(new Uint32Array(1)).toString()
+// @ts-expect-error
+const cacheVersion = DEPLOY_ID
 
 async function compareDeployDetails() {
-  const cache = await caches.open(cacheVersion)
-  const cachedResponse = await cache.match('deploy')
   const fetchedResponse = await fetch('/deploy')
   const fetchedJson = await fetchedResponse.json()
 
-  if (cachedResponse) {
-    const cachedJson = await cachedResponse.json()
-    if (
-      cachedJson.deployId === '' ||
-      cachedJson.deployId !== fetchedJson.deployId
-    ) {
-      return 'stale'
-    }
+  if (cacheVersion !== fetchedJson.deployId) {
+    return 'stale'
   }
-
-  await cache.put(
-    'deploy',
-    Response.json({
-      deployId: fetchedJson.deployId,
-      lastFetched: Date.now()
-    })
-  )
 
   return 'fresh'
 }
