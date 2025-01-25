@@ -26,18 +26,27 @@ async function deleteUnusedCache(all = false) {
   }
 }
 
-async function handleRequest(e: FetchEvent) {
+async function fetchAndCacheAssets() {
+  const response = await fetch('/api/assets')
+  const json = await response.json()
+
+  for (const asset of json.assets) {
+    await handleRequest(new Request(asset))
+  }
+}
+
+async function handleRequest(req: Request) {
   const cache = await caches.open(cacheVersion)
-  const cachedResponse = await cache.match(e.request)
+  const cachedResponse = await cache.match(req)
 
   if (cachedResponse) {
     return cachedResponse
   }
 
-  const response = await fetch(e.request.clone())
+  const response = await fetch(req.clone())
 
   if (response.status < 400) {
-    await cache.put(e.request, response.clone())
+    await cache.put(req, response.clone())
   }
 
   bc.postMessage('error')
@@ -49,6 +58,7 @@ addEventListener(
   'activate',
   (e) => {
     e.waitUntil(deleteUnusedCache())
+    e.waitUntil(fetchAndCacheAssets())
   },
   {
     once: true
@@ -60,10 +70,12 @@ addEventListener('fetch', (e) => {
   if (!url.pathname.endsWith('.js')) {
     return
   }
-  e.respondWith(handleRequest(e))
+  e.respondWith(handleRequest(e.request))
 })
 
-addEventListener('install', skipWaiting)
+addEventListener('install', skipWaiting, {
+  once: true
+})
 
 bc.addEventListener('message', async (e) => {
   switch (e.data) {
