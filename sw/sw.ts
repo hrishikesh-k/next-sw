@@ -58,7 +58,6 @@ addEventListener(
   'activate',
   (e) => {
     e.waitUntil(deleteUnusedCache())
-    e.waitUntil(fetchAndCacheAssets())
   },
   {
     once: true
@@ -88,6 +87,7 @@ bc.addEventListener('message', async (e) => {
     case 'load':
       {
         const status = await compareDeployDetails()
+        await fetchAndCacheAssets()
         bc.postMessage(status)
       }
       break
