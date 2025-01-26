@@ -1,10 +1,34 @@
 'use client'
 
-import { type MouseEvent as ReactMouseEvent, useEffect, useState } from 'react'
+import CloseIcon from '@mui/icons-material/Close'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Snackbar, { type SnackbarCloseReason } from '@mui/material/Snackbar'
+import {
+  type MouseEvent as ReactMouseEvent,
+  type SyntheticEvent,
+  useEffect,
+  useState
+} from 'react'
 
 export default function () {
   const [bc] = useState(new BroadcastChannel('sw'))
-  const [cacheFreshness, setCacheFreshness] = useState(true)
+  const [open, setOpen] = useState(false)
+
+  const action = (
+    <>
+      <Button color="secondary" onClick={onClick} size="small">
+        Refresh
+      </Button>
+      <IconButton
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+        size="small">
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  )
 
   function onClick(_: ReactMouseEvent<HTMLButtonElement, MouseEvent>) {
     bc.postMessage('delete')
@@ -19,6 +43,18 @@ export default function () {
         once: true
       }
     )
+    handleClose()
+  }
+
+  function handleClose(
+    _?: Event | SyntheticEvent,
+    reason?: SnackbarCloseReason
+  ) {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setOpen(false)
   }
 
   useEffect(() => {
@@ -30,7 +66,7 @@ export default function () {
         switch (e.data) {
           case 'error':
           case 'stale':
-            setCacheFreshness(false)
+            setOpen(true)
             break
           default:
           // no-op
@@ -40,12 +76,12 @@ export default function () {
   }, [bc])
 
   return (
-    <>
-      {!cacheFreshness && (
-        <button onClick={onClick} type="button">
-          Refresh page
-        </button>
-      )}
-    </>
+    <Snackbar
+      action={action}
+      autoHideDuration={5000}
+      message="Page updated"
+      onClose={handleClose}
+      open={open}
+    />
   )
 }

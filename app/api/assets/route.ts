@@ -10,7 +10,10 @@ export function GET() {
       ? Object.values(JSON.parse(readFileSync(manifestPath, 'utf-8')))
           .filter((a) => {
             const asset = a as string
-            return asset.startsWith('static') && asset.endsWith('.js')
+            return (
+              asset.startsWith('static') &&
+              (asset.endsWith('.js') || asset.endsWith('.css'))
+            )
           })
           .map((a) => `/_next/${a}`)
       : []

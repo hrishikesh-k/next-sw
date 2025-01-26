@@ -2,6 +2,7 @@ const bc = new BroadcastChannel('sw')
 // @ts-expect-error
 // biome-ignore lint/correctness/noUndeclaredVariables: transformed by esbuild
 const cacheVersion = DEPLOY_ID
+const pathnameRegex = /\.(?:cs|j)s$/
 
 async function compareDeployDetails() {
   const fetchedResponse = await fetch('/api/deploy')
@@ -66,9 +67,11 @@ addEventListener(
 
 addEventListener('fetch', (e) => {
   const url = new URL(e.request.url)
-  if (!url.pathname.endsWith('.js')) {
+
+  if (!pathnameRegex.test(url.pathname)) {
     return
   }
+
   e.respondWith(handleRequest(e.request))
 })
 
