@@ -2,6 +2,9 @@ import WebpackAssetsManifest from 'webpack-assets-manifest'
 
 /** @type {import('next').NextConfig} */
 const config = {
+  images: {
+    remotePatterns: [new URL('https://images.pexels.com/**')],
+  },
   outputFileTracingIncludes: {
     '/api/assets': ['./.next/assets-manifest.json']
   },
